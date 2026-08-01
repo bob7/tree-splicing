@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Tree Builder</title>
+  <style>
+    :root{color-scheme:dark;--ink:#edf2ef;--muted:#9aa7a0;--paper:#101512;--panel:#181f1b;--surface:#222b26;--soft:#2a342f;--line:#35413b;--grid:#2b3530;--edge:#97a49d;--hint:#849089;--root-ring:#b8c2bc;--pie-rest:#313c36;--left:#f06b43;--right:#4f82df;--shadow:0 24px 70px rgba(0,0,0,.34)}
+    :root[data-theme="light"]{color-scheme:light;--ink:#17231e;--muted:#68736d;--paper:#f4f2eb;--panel:#fbfaf6;--surface:#fff;--soft:#e8e8e0;--line:#d9dcd4;--grid:#e1e3dd;--edge:#58645e;--hint:#a2a8a2;--root-ring:#fbfaf6;--pie-rest:#e8e8e0;--left:#e45d36;--right:#2459b8;--shadow:0 24px 70px rgba(35,44,39,.09)}
+    *{box-sizing:border-box}html,body{min-height:100%}body{margin:0;color:var(--ink);background:var(--paper);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;transition:color .18s ease,background .18s ease}button,input{font:inherit}
+    .app-shell{width:min(1320px,calc(100% - 48px));margin:auto;padding:24px 0}
+    .controls{display:flex;align-items:center;justify-content:space-between;gap:24px;min-height:82px;padding:16px 20px;border:1px solid var(--line);border-radius:16px 16px 0 0;background:var(--panel)}
+    .slider-control{display:grid;width:min(520px,58vw);grid-template-columns:auto minmax(120px,1fr) auto auto auto;align-items:center;gap:12px}
+    .slider-bound,#gridValue{color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.72rem}#gridValue{min-width:64px;padding:8px 10px;border-radius:8px;color:var(--ink);background:var(--soft);text-align:center}
+    .weight-control{display:flex;align-items:center;gap:8px}.weight-pie{width:42px;height:42px;flex:0 0 auto;border:1px solid var(--line);border-radius:50%;background:conic-gradient(var(--left) var(--w-fill,0%),var(--pie-rest) 0);box-shadow:inset 0 0 0 2px var(--panel)}#wValue{min-width:58px;color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem}
+    input[type=range]{height:4px;border-radius:99px;appearance:none;background:linear-gradient(90deg,var(--left) var(--fill,42.8%),#d9ddd6 var(--fill,42.8%));cursor:pointer}input[type=range]::-webkit-slider-thumb{width:18px;height:18px;border:4px solid var(--panel);border-radius:50%;appearance:none;background:var(--left);box-shadow:0 0 0 1px var(--left)}
+    .counter-actions{display:flex;align-items:center;gap:12px}.reset-button{min-height:50px;padding:0 20px;border:1px solid var(--line);border-radius:12px;color:var(--ink);background:var(--surface);font-size:.8rem;font-weight:700;cursor:pointer}.reset-button:hover{border-color:var(--muted);background:var(--soft)}
+    .theme-switch{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:.75rem;font-weight:650;cursor:pointer;user-select:none}.theme-switch input{position:absolute;opacity:0;pointer-events:none}.switch-track{position:relative;width:44px;height:24px;border:1px solid var(--line);border-radius:999px;background:var(--soft);transition:background .18s ease}.switch-track::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--muted);transition:transform .18s ease,background .18s ease}.theme-switch input:checked+.switch-track{background:rgba(240,107,67,.24)}.theme-switch input:checked+.switch-track::after{background:var(--left);transform:translateX(20px)}.theme-switch input:focus-visible+.switch-track{outline:3px solid rgba(228,93,54,.3);outline-offset:3px}
+    .tree-stage{position:relative;display:grid;grid-template-columns:1fr 1px 1fr;min-height:clamp(470px,70vh,760px);overflow:hidden;border:1px solid var(--line);border-top:0;border-radius:0 0 16px 16px;background:var(--panel);box-shadow:var(--shadow)}
+    .tree-panel{display:grid;min-width:0;grid-template-rows:56px minmax(400px,1fr)}.panel-heading{display:flex;align-items:center;padding:0 20px;border-bottom:1px solid var(--line)}.panel-heading>div{display:flex;align-items:center;gap:10px}.panel-heading h2{margin:0;font-size:.84rem}.tree-badge{display:grid;width:25px;height:25px;place-items:center;border-radius:7px;color:white;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.7rem}.tree-badge--left{background:var(--left)}.tree-badge--right{background:var(--right)}
+    .stage-divider{position:relative;z-index:3;display:flex;width:1px;flex-direction:column;align-items:center;background:var(--line)}.stage-divider span{flex:1}.stage-divider b{display:grid;width:25px;height:25px;place-items:center;border:1px solid var(--line);border-radius:50%;color:#9aa19b;background:var(--panel);font-size:.65rem;font-weight:400}
+    .tree-area{position:relative;min-height:400px;overflow:hidden;background:var(--panel)}.tree-area--interactive{cursor:crosshair}.tree-area svg{position:absolute;inset:0;width:100%;height:100%}.click-hint,.waiting-label{position:absolute;top:42%;left:50%;display:flex;align-items:center;gap:9px;color:var(--hint);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.65rem;pointer-events:none;transform:translate(-50%,-50%);transition:opacity .2s}.click-hint span{display:grid;width:23px;height:23px;place-items:center;border:1px dashed var(--muted);border-radius:50%;font-size:.9rem}.tree-area.has-nodes .click-hint{opacity:0}
+    .grid-line{stroke:var(--grid);stroke-width:1;vector-effect:non-scaling-stroke}.tree-edge{stroke:var(--edge);stroke-linecap:round;stroke-width:1.15;vector-effect:non-scaling-stroke}.tree-node{stroke:var(--panel);stroke-width:2.5;vector-effect:non-scaling-stroke;filter:drop-shadow(0 2px 3px rgba(0,0,0,.28))}.tree-node--root{stroke:var(--root-ring);stroke-width:3}.sr-only{position:absolute;width:1px;height:1px;padding:0;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    button:focus-visible,.tree-area:focus-visible,input:focus-visible{outline:3px solid rgba(228,93,54,.24);outline-offset:3px}
+    @media(max-width:780px){.app-shell{width:min(100% - 24px,680px);padding-top:12px}.controls{align-items:stretch;flex-direction:column;gap:14px}.slider-control{width:100%}.counter-actions{justify-content:flex-end}.tree-stage{grid-template-columns:1fr;overflow:visible}.tree-panel{grid-template-rows:52px 430px}.stage-divider{display:none}.tree-panel--waiting{border-top:1px solid var(--line)}}
+    @media(max-width:430px){.slider-control{grid-template-columns:auto minmax(100px,1fr) auto}.slider-control #gridValue{grid-column:1/3;justify-self:end}.weight-control{grid-column:3;grid-row:2}.counter-actions>*{flex:1}}
+  </style>
+</head>
+<body>
+  <main class="app-shell">
+    <section class="controls" aria-label="Tree controls">
+      <div class="slider-control">
+        <span class="slider-bound">2</span>
+        <input id="gridSlider" type="range" min="2" max="16" value="8" step="1" aria-label="Tree height divisions" aria-describedby="gridValue">
+        <span class="slider-bound">16</span>
+        <output id="gridValue" for="gridSlider">N = 8</output>
+        <div class="weight-control" aria-label="Current weight">
+          <div id="weightPie" class="weight-pie" role="img" aria-label="w equals 0"></div>
+          <output id="wValue">w = 0</output>
+        </div>
+      </div>
+      <div class="counter-actions" aria-label="Tree statistics and actions">
+        <label class="theme-switch" for="themeToggle">
+          <span>Dark mode</span>
+          <input id="themeToggle" type="checkbox" role="switch" checked aria-label="Dark mode">
+          <span class="switch-track" aria-hidden="true"></span>
+        </label>
+        <button id="resetButton" class="reset-button" type="button">Reset</button>
+      </div>
+    </section>
+    <section class="tree-stage" aria-label="Tree construction area">
+      <article class="tree-panel tree-panel--active">
+        <div class="panel-heading"><div><span class="tree-badge tree-badge--left">L</span><h2>L-tree</h2></div></div>
+        <div id="leftTreeArea" class="tree-area tree-area--interactive" role="application" tabindex="0" aria-label="Left tree. Click an empty point above the root to add a node.">
+          <svg id="leftTreeSvg" aria-hidden="true"></svg>
+          <div class="click-hint" aria-hidden="true"><span>+</span>click anywhere above the root</div>
+        </div>
+      </article>
+      <div class="stage-divider" aria-hidden="true"><span></span><b>×</b><span></span></div>
+      <article class="tree-panel tree-panel--waiting">
+        <div class="panel-heading"><div><span class="tree-badge tree-badge--right">R</span><h2>R-tree</h2></div></div>
+        <div id="rightTreeArea" class="tree-area" aria-label="Right tree generated from the left tree.">
+          <svg id="rightTreeSvg" aria-hidden="true"></svg>
+        </div>
+      </article>
+    </section>
+  </main>
+  <div id="liveRegion" class="sr-only" aria-live="polite"></div>
+  <script>
+    const SVG_NS="http://www.w3.org/2000/svg",NODE_RADIUS=7,ROOT_BOTTOM_OFFSET=32,ROOT_COLOR="#000000",RIGHT_ROOT_COLOR="#000000",NODE_PALETTE=["#df5333","#f0a22e","#2f9c68","#2f78c4","#7656c9","#d94c84","#16a1a0","#a86b32"];
+    const leftArea=document.querySelector("#leftTreeArea"),rightArea=document.querySelector("#rightTreeArea"),leftSvg=document.querySelector("#leftTreeSvg"),rightSvg=document.querySelector("#rightTreeSvg"),gridSlider=document.querySelector("#gridSlider"),gridValue=document.querySelector("#gridValue"),weightPie=document.querySelector("#weightPie"),wValue=document.querySelector("#wValue"),themeToggle=document.querySelector("#themeToggle"),resetButton=document.querySelector("#resetButton"),liveRegion=document.querySelector("#liveRegion");
+    let leftNodes=[],rightNodes=[],nextNodeId=1,nextRightNodeId=1,w=0,resizeFrame=null;
+    function svgElement(name,attributes={}){const element=document.createElementNS(SVG_NS,name);Object.entries(attributes).forEach(([key,value])=>element.setAttribute(key,value));return element}
+    function dimensions(area){return{width:Math.max(area.clientWidth,1),height:Math.max(area.clientHeight,1)}}
+    function rootPosition(area){const{width,height}=dimensions(area);return{x:width/2,y:height-ROOT_BOTTOM_OFFSET}}
+    function updateWeightDisplay(){const proportion=Math.max(0,Math.min(w,1)),text=Number(w.toFixed(6)).toString();weightPie.style.setProperty("--w-fill",`${proportion*100}%`);weightPie.setAttribute("aria-label",`w equals ${text}`);wValue.value=`w = ${text}`;wValue.textContent=`w = ${text}`}
+    function resetLeftTree(announce=true){leftNodes=[{id:0,xRatio:.5,gridLevel:0,parentId:null,color:ROOT_COLOR,root:true}];rightNodes=[{id:0,xRatio:.5,gridLevel:0,parentId:null,color:RIGHT_ROOT_COLOR,root:true,visible:true,sourceLId:0}];nextNodeId=1;nextRightNodeId=1;w=0;updateWeightDisplay();leftArea.classList.remove("has-nodes");renderAll();if(announce)liveRegion.textContent="Both trees and w reset."}
+    function rgb(color){const value=parseInt(color.slice(1),16);return[(value>>16)&255,(value>>8)&255,value&255]}
+    function colorDistance(a,b){const [ar,ag,ab]=rgb(a),[br,bg,bb]=rgb(b);return Math.hypot(ar-br,ag-bg,ab-bb)}
+    function randomNodeColor(){
+      const existingColors=leftNodes.map(node=>node.color);
+      const scored=NODE_PALETTE.map(color=>{const distances=existingColors.map(existing=>colorDistance(color,existing));return{color,minDistance:Math.min(...distances),totalDistance:distances.reduce((sum,value)=>sum+value,0)}});
+      const bestMinimum=Math.max(...scored.map(item=>item.minDistance));
+      const minimumWinners=scored.filter(item=>Math.abs(item.minDistance-bestMinimum)<.001);
+      const bestTotal=Math.max(...minimumWinners.map(item=>item.totalDistance));
+      const winners=minimumWinners.filter(item=>Math.abs(item.totalDistance-bestTotal)<.001);
+      return winners[Math.floor(Math.random()*winners.length)].color;
+    }
+    function gridLineY(level,height,divisions){const top=18,bottom=height-ROOT_BOTTOM_OFFSET;return bottom-(Math.min(level,divisions)/divisions)*(bottom-top)}
+    function absoluteNode(node,width,height){const divisions=Number(gridSlider.value);return{...node,x:node.xRatio*width,y:gridLineY(node.gridLevel??0,height,divisions)}}
+    function snappedGridLevel(y,height,divisions){const top=18,bottom=height-ROOT_BOTTOM_OFFSET,step=(bottom-top)/divisions,clampedY=Math.max(top,Math.min(y,bottom));return Math.max(0,Math.min(divisions,Math.floor((bottom-clampedY)/step)))}
+    function normalizeTree(nodes){
+      const children=new Map(nodes.map(node=>[node.id,[]]));
+      nodes.forEach(node=>{if(node.parentId!==null)children.get(node.parentId)?.push(node)});
+      children.forEach(group=>group.sort((a,b)=>a.xRatio-b.xRatio));
+      const slots=new Map();let nextSlot=0;
+      function place(node){const group=children.get(node.id)||[];if(!group.length){slots.set(node.id,nextSlot++);return slots.get(node.id)}const childSlots=group.map(place),position=(childSlots[0]+childSlots[childSlots.length-1])/2;slots.set(node.id,position);return position}
+      place(nodes[0]);
+      const count=Math.max(nextSlot,1),padding=.08,span=1-padding*2;
+      nodes.forEach(node=>{node.xRatio=count===1?.5:padding+(slots.get(node.id)/(count-1))*span});
+    }
+    function rightChildCount(nodeId){return rightNodes.reduce((count,node)=>count+(node.parentId===nodeId?1:0),0)}
+    function ancestorPath(nodes,node,includeSelf=true){const byId=new Map(nodes.map(item=>[item.id,item])),path=[];let cursor=includeSelf?node:byId.get(node.parentId);while(cursor){path.push(cursor);cursor=byId.get(cursor.parentId)}return path.reverse()}
+    function candidateMatchesAncestors(candidate,newLeftNode){
+      const required=ancestorPath(leftNodes,newLeftNode,false).filter(node=>node.gridLevel<=candidate.gridLevel);
+      const visibleAncestors=ancestorPath(rightNodes,candidate,true).filter(node=>node.visible);
+      return required.every(leftNode=>visibleAncestors.some(rightNode=>rightNode.gridLevel===leftNode.gridLevel&&rightNode.color===leftNode.color));
+    }
+    function latestEligibleRightNode(newLeftNode){for(let index=rightNodes.length-1;index>=0;index--){const candidate=rightNodes[index];if(candidate.gridLevel<newLeftNode.gridLevel&&rightChildCount(candidate.id)<=1&&candidateMatchesAncestors(candidate,newLeftNode))return candidate}return null}
+    function addHiddenNodesBetween(parent,targetLevel,xRatio){let current=parent;for(let level=parent.gridLevel+1;level<targetLevel;level++){const hidden={id:nextRightNodeId++,xRatio,gridLevel:level,parentId:current.id,color:null,root:false,visible:false,sourceLId:null};rightNodes.push(hidden);current=hidden}return current}
+    function addCorrespondingRightChain(newLeftNode){
+      const base=latestEligibleRightNode(newLeftNode);if(!base)return 0;
+      const chain=ancestorPath(leftNodes,newLeftNode,true).filter(node=>node.gridLevel>base.gridLevel);
+      let rightParent=base,visibleCount=0,hiddenCount=0;
+      chain.forEach(leftNode=>{const before=rightNodes.length;rightParent=addHiddenNodesBetween(rightParent,leftNode.gridLevel,leftNode.xRatio);hiddenCount+=rightNodes.length-before;const copy={id:nextRightNodeId++,xRatio:leftNode.xRatio,gridLevel:leftNode.gridLevel,parentId:rightParent.id,color:leftNode.color,root:false,visible:true,sourceLId:leftNode.id};rightNodes.push(copy);rightParent=copy;visibleCount++});
+      normalizeTree(rightNodes);
+      return{visibleCount,hiddenCount};
+    }
+    function drawGrid(svg,width,height,divisions){const grid=svgElement("g",{class:"grid"}),top=18,bottom=height-ROOT_BOTTOM_OFFSET;for(let index=0;index<=divisions;index++){const progress=index/divisions,y=bottom-progress*(bottom-top);grid.append(svgElement("line",{class:"grid-line",x1:0,y1:y,x2:width,y2:y}))}svg.append(grid)}
+    function drawTree(svg,area,nodes,rootColor){const{width,height}=dimensions(area),divisions=Number(gridSlider.value);svg.replaceChildren();svg.setAttribute("viewBox",`0 0 ${width} ${height}`);drawGrid(svg,width,height,divisions);const absoluteNodes=nodes.map(node=>absoluteNode(node,width,height)),nodeMap=new Map(absoluteNodes.map(node=>[node.id,node])),edgeGroup=svgElement("g",{class:"tree-edges"});absoluteNodes.forEach(node=>{if(node.parentId===null)return;const parent=nodeMap.get(node.parentId);if(parent)edgeGroup.append(svgElement("line",{class:"tree-edge",x1:node.x,y1:node.y,x2:parent.x,y2:parent.y}))});svg.append(edgeGroup);const nodeGroup=svgElement("g",{class:"tree-nodes"});absoluteNodes.filter(node=>node.visible!==false).forEach(node=>nodeGroup.append(svgElement("circle",{class:`tree-node${node.root?" tree-node--root":""}`,cx:node.x,cy:node.y,r:node.root?NODE_RADIUS+1:NODE_RADIUS,fill:node.root?rootColor:node.color})));svg.append(nodeGroup)}
+    function renderAll(){if(!leftNodes.length)return;drawTree(leftSvg,leftArea,leftNodes,ROOT_COLOR);drawTree(rightSvg,rightArea,rightNodes,RIGHT_ROOT_COLOR)}
+    function isOccupied(x,y,width,height){return leftNodes.some(node=>{const absolute=absoluteNode(node,width,height);return Math.hypot(absolute.x-x,absolute.y-y)<NODE_RADIUS*3})}
+    function closestNodeBelow(x,y,width,height){return leftNodes.map(node=>absoluteNode(node,width,height)).filter(node=>node.y>y+NODE_RADIUS).reduce((closest,node)=>{if(!closest)return node;return Math.hypot(node.x-x,node.y-y)<Math.hypot(closest.x-x,closest.y-y)?node:closest},null)}
+    function addNodeAt(clientX,clientY){const rect=leftArea.getBoundingClientRect(),{width,height}=dimensions(leftArea),divisions=Number(gridSlider.value),x=Math.max(NODE_RADIUS,Math.min(clientX-rect.left,width-NODE_RADIUS)),clickY=Math.max(18,Math.min(clientY-rect.top,height-ROOT_BOTTOM_OFFSET)),gridLevel=snappedGridLevel(clickY,height,divisions),y=gridLineY(gridLevel,height,divisions);if(isOccupied(x,y,width,height)){liveRegion.textContent="That grid position is already occupied by a node.";return}const parent=closestNodeBelow(x,y,width,height);if(!parent){liveRegion.textContent="Choose a point high enough to place the node above an existing L-node.";return}const newLeftNode={id:nextNodeId,xRatio:x/width,gridLevel,parentId:parent.id,color:randomNodeColor(),root:false};leftNodes.push(newLeftNode);nextNodeId++;w+=2**(-gridLevel);updateWeightDisplay();normalizeTree(leftNodes);const generated=addCorrespondingRightChain(newLeftNode);leftArea.classList.add("has-nodes");renderAll();liveRegion.textContent=generated?`L-node ${leftNodes.length} added; w is ${Number(w.toFixed(6))}; ${generated.visibleCount} visible and ${generated.hiddenCount} hidden R-nodes generated.`:`L-node ${leftNodes.length} added; w is ${Number(w.toFixed(6))}; no eligible R-node was found.`}
+    leftArea.addEventListener("click",event=>addNodeAt(event.clientX,event.clientY));leftArea.addEventListener("keydown",event=>{if(event.key!=="Enter"&&event.key!==" ")return;event.preventDefault();const rect=leftArea.getBoundingClientRect();addNodeAt(rect.left+rect.width/2,rect.top+rect.height*.42)});
+    gridSlider.addEventListener("input",()=>{const min=Number(gridSlider.min),max=Number(gridSlider.max),highestLevel=Math.max(...leftNodes.map(node=>node.gridLevel??0));if(Number(gridSlider.value)<highestLevel)gridSlider.value=highestLevel;const value=Number(gridSlider.value),fill=(value-min)/(max-min)*100;gridSlider.style.setProperty("--fill",`${fill}%`);gridValue.value=`N = ${value}`;gridValue.textContent=`N = ${value}`;renderAll()});themeToggle.addEventListener("change",()=>{document.documentElement.dataset.theme=themeToggle.checked?"dark":"light";liveRegion.textContent=`${themeToggle.checked?"Dark":"Light"} mode enabled.`});resetButton.addEventListener("click",()=>resetLeftTree());window.addEventListener("resize",()=>{window.cancelAnimationFrame(resizeFrame);resizeFrame=window.requestAnimationFrame(renderAll)});resetLeftTree(false);
+  </script>
+</body>
+</html>
