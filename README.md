@@ -1,0 +1,1 @@
+Graphical implementation of the layered coding of [Barmpalias and Lewis-Pye (2019)](https://arxiv.org/abs/1710.02092) (for a simplification see [Shen (2023)](https://arxiv.org/pdf/2304.04852)) which dynamically converts a multi-branching tree into an equivalent 2-branching tree.
