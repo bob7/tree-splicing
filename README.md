@@ -5,3 +5,4 @@ Graphical implementation of the
 
 which dynamically converts multi-branching to equivalent 2-branching trees.
 
+<p margin-top="400px" align="center"><img width="650"  src="./kcodeGraph1.png"></p>
