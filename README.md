@@ -51,7 +51,7 @@ The **back (‹)** and **forward (›)** buttons move one successful node additi
 
 The R-tree is built incrementally, in the order L-nodes are added. Both trees start with a black root at grid level 0. Every L-node has a unique RGB color selected to remain visually distinct from existing L-node colors. Color identifies an L-node: its visible copies in R have exactly the same color and grid level. One L-node may have several R-copies; the node numbers in L and R are independent creation numbers. When a new L-node `v` is added as a child of `x`, the algorithm proceeds as follows: 
 
-1. **Use the current match of `x`.** Each L-node has one current R-match: its newest visible R-copy. A new L-child `v` is attached to this match.
+1. **Use the current match of `x`.** Each L-node has one current R-match: its newest visible R-copy `v`. 
 2. **Replace a saturated match.** If the current R-match `r` has no room for the new branch, split the incoming R-edge at the grid line immediately below `r` and add a new copy `r'` beside `r`. If that attachment point is also full, copy the required attachment path first. The copy has the same color and grid level as `r`, and becomes the current match of `x`.
 3. **Add the new match.** Attach the new R-copy of `v` above the current match of `x`, preserving `v`'s color and grid level.
 4. **Fill skipped grid levels.** Before a visible copy, insert one hidden R-node at every intermediate grid level. Hidden nodes have no colored circle and are not L-node matches.
