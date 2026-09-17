@@ -36,12 +36,10 @@ The **back (‹)** and **forward (›)** buttons move one successful node additi
 
 ### Export the current view
 
-- The **download icon** before **svg** in the top export group downloads `L-R-trees.txt`, containing tree-style diagrams for the previous and current stages. The diagrams list branches depth-first, from left to right, using `├`, `└`, `─`, and `│` connectors; horizontal edge length is proportional to the nodes' grid-level difference. The R-tree export includes only colored nodes; when hidden encoding nodes sit between them, it connects a colored node directly to its nearest colored R-tree ancestor. Its displayed R-node numbers are reassigned consecutively from `0`, so hidden-node creation IDs never leave gaps, and each R-node label has the form `r(l)`, where `r` is that displayed R-node index and `l` is the L-node for which it was created.
-- **svg** downloads the current two-tree construction area as `tree-builder.svg` and `tree-builder.html`. The HTML file embeds the exact same SVG markup directly in its body, ready to display in a browser or copy into another HTML page. Direct **SVG** and **HTML** download links also appear below the trees, so either file can be downloaded individually if an automatic download does not arrive. These links retain the latest exported snapshot until the next SVG export.
-- The top **gif** button becomes enabled after the first successful L-node addition, whether made manually, with **Step**, or by **loop**. It records the initial roots and one frame after every successful addition since **Reset**. Press **gif** to download a looping `tree-steps.gif` and a looping `tree-steps.svg` containing the sequence up to the moment the button was pressed. The SVG animation keeps each recorded frame as vector graphics. Both exports include the control panel and both tree panels, with 0.6 seconds per frame. Export is also available during a loop; later additions appear in the next export.
-- The **gif** beside **splice** records one splice and split cycle, then downloads `splice-split.gif` and its vector-based animated SVG equivalent `splice-split.svg`. These exports contain the R-tree transition area and use the same transition cadence as the browser view.
-
-Starting, pausing, or resuming a loop preserves the recorded sequence. **Reset** clears it and disables the top **gif** button until another node is added.
+- The **download icon** before **svg** in the top export group downloads a text file containing tree-style diagrams for the previous and current stages. 
+- **svg** downloads the current two-tree construction area as an svg file (standalone and html-embeded)
+- The top **gif** button downloads the transitions since the last reset as svg and gif files.
+- The **gif** beside **splice** downloads gif/svg file with the plice/split transition which  transforms the R-tree into the L-tree.
 
 ### R-tree transition controls
 
