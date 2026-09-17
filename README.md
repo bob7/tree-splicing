@@ -45,8 +45,8 @@ Starting, pausing, or resuming a loop preserves the recorded sequence. **Reset**
 
 ### R-tree transition controls
 
-- **splice** moves the visible R-node groups into their corresponding L-tree positions. While this layout is active, the same button is labeled **split**.
-- **split** returns those groups to the encoded R-tree layout. The edge movement is animated so each transition can be inspected before the final layout is drawn.
+- **splice** moves the visible R-node groups into their corresponding L-tree positions. 
+- **split** returns those groups to the encoded R-tree layout. 
 - **width growth** expands or collapses the i-width comparison chart below the trees.
 
 ### R-tree generation algorithm
@@ -57,6 +57,6 @@ The R-tree is built incrementally, in the order L-nodes are added. Both trees st
 2. **Replace a saturated match.** If the current R-match `r` has no room for the new branch, split the incoming R-edge at the grid line immediately below `r` and add a new copy `r'` beside `r`. If that attachment point is also full, copy the required attachment path first. The copy has the same color and grid level as `r`, and becomes the current match of `x`.
 3. **Add the new match.** Attach the new R-copy of `v` above the current match of `x`, preserving `v`'s color and grid level.
 4. **Fill skipped grid levels.** Before a visible copy, insert one hidden R-node at every intermediate grid level. Hidden nodes have no colored circle and are not L-node matches.
-5. **Update the layout.** Redistribute horizontal positions and rescale the shared vertical grid as needed. Existing R-parent relationships are preserved; the operation adds a new chain.
+5. **Update the layout.** Redistribute horizontal positions and rescale the shared vertical grid as needed. 
 
 For example, if a new L-node is added under green L-node 4 and its current green R-match is full, a new green copy is created beside that match first. The new L-node's R-copy then attaches above the replacement copy; the replacement is the new current match for L-node 4.
