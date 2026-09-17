@@ -28,7 +28,7 @@ Manual additions are rejected if they would make the displayed load reach or exc
 - **loop** begins repeated Step actions every 0.6 seconds. Its label changes to **pause** while it is running; press it again to pause.
 - **Reset** stops a loop (if one is active), clears the trees, and starts a fresh construction.
 
-### Node matches and history nevigation
+### Node matches and history navigation
 
 Hover a colored L-node to see its L-node number and highlight its current R-node match in the R-tree panel. Hover a colored R-node to see its R-node number and the L-node for which that R-node was created; its corresponding L-node is highlighted in the L-tree panel.
 
@@ -37,9 +37,9 @@ The **back (‹)** and **forward (›)** buttons move one successful node additi
 ### Export the current view
 
 - The **download icon** downloads a text file containing tree-style diagrams for the previous and current stages. 
-- **svg** downloads the current two-tree construction area as an svg file (standalone and html-embeded)
+- **svg** downloads the current two-tree construction area as an svg file (standalone and embedded)
 - The top **gif** button downloads the transitions since the last reset as svg and gif files.
-- The **gif** beside **splice** downloads gif/svg file with the plice/split transition which  transforms the R-tree into the L-tree.
+- The **gif** beside **splice** downloads gif/svg file with the splice/split transition which  transforms the R-tree into the L-tree.
 
 ### R-tree transition controls
 
