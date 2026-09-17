@@ -55,10 +55,6 @@ Starting, pausing, or resuming a loop preserves the recorded sequence. **Reset**
 - **split** returns those groups to the encoded R-tree layout. The edge movement is animated so each transition can be inspected before the final layout is drawn.
 - **width growth** expands or collapses the i-width comparison chart below the trees.
 
-### Appearance
-
-Use the **sun/moon icon** at the right of the top panel to change themes. The icon uses the same shapes as [barmpalias.net](http://barmpalias.net/icons/theme.svg): a sun to switch to light mode and a moon to switch to dark mode. Light mode applies only to the two tree-growing areas below the L-tree and R-tree headings, using white backgrounds with darker grid lines and edges. The headings, controls, width chart, and page remain dark.
-
 ### R-tree generation algorithm
 
 The R-tree is built incrementally, in the order L-nodes are added. Both trees start with a black root at grid level 0. Every L-node has a unique RGB color selected to remain visually distinct from existing L-node colors. Color identifies an L-node: its visible copies in R have exactly the same color and grid level. One L-node may have several R-copies; the node numbers in L and R are independent creation numbers.
