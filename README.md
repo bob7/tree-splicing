@@ -20,7 +20,7 @@ Open `kcodeApp.html` in a modern web browser. The left panel is the editable **L
 3. The vertical grid distance between the new node and its parent determines the new node's level. The colored node and its edge appear on the left, while the corresponding visible and hidden R-tree nodes are generated on the right.
 4. Both trees and their grid lines scale down automatically as the trees grow. The tallest nodes stay on or below the second grid line from the top, leaving at least one empty grid line above the leaves for further additions. Click the top grid line or the 40-pixel space above it to extend the tree; this remains available as the grid spacing shrinks.
 
-Manual additions are rejected if they would make the displayed load reach or exceed 100%. The pie chart beside **Load** shows the current load; its accessible label includes the whole percentage. **Reset** clears both trees, returns the load to 0%, and discards any recorded loop frames.
+Manual additions are rejected if they would make the displayed load reach or exceed 100%. The pie chart beside **Load** shows the current load; its accessible label includes the whole percentage. **Reset** clears both trees.
 
 ### Generate a random tree
 
