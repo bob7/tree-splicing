@@ -28,17 +28,11 @@ Manual additions are rejected if they would make the displayed load reach or exc
 - **loop** begins repeated Step actions every 0.6 seconds. Its label changes to **pause** while it is running; press it again to pause.
 - **Reset** stops a loop (if one is active), clears the trees, and starts a fresh construction.
 
-Random generation always keeps `w < 1` and observes the configured structural rules: the root has at most one child, no node is placed one level above the root, parent-child grid distance is at most 3, long unbranched runs are avoided, and the applicable single-child span limits are maintained. The height grows automatically as needed, without a fixed level cap.
-
-### Browse earlier stages
-
-The **back (‹)** and **forward (›)** buttons move one successful node addition at a time through the construction history, including manual, Step, and loop additions. Both trees, their colors, the load, and the grid scale return to the selected stage. Navigation pauses a running loop. Buttons are disabled at the beginning or end of the history.
-
-Adding a node while viewing an earlier stage replaces the later stages with the new continuation. The top **gif** button exports the sequence through the selected stage; navigating alone preserves the later stages so you can return with **forward**. **Reset** clears the entire history.
-
-### Inspect node matches
+### Node matches and history nevigation
 
 Hover a colored L-node to see its L-node number and highlight its current R-node match in the R-tree panel. Hover a colored R-node to see its R-node number and the L-node for which that R-node was created; its corresponding L-node is highlighted in the L-tree panel.
+
+The **back (‹)** and **forward (›)** buttons move one successful node addition at a time through the construction history, including manual, Step, and loop additions. Both trees, their colors, the load, and the grid scale return to the selected stage. Navigation pauses a running loop. Buttons are disabled at the beginning or end of the history.
 
 ### Export the current view
 
@@ -57,9 +51,7 @@ Starting, pausing, or resuming a loop preserves the recorded sequence. **Reset**
 
 ### R-tree generation algorithm
 
-The R-tree is built incrementally, in the order L-nodes are added. Both trees start with a black root at grid level 0. Every L-node has a unique RGB color selected to remain visually distinct from existing L-node colors. Color identifies an L-node: its visible copies in R have exactly the same color and grid level. One L-node may have several R-copies; the node numbers in L and R are independent creation numbers.
-
-When a new L-node `v` is added as a child of `x`, the algorithm proceeds as follows:
+The R-tree is built incrementally, in the order L-nodes are added. Both trees start with a black root at grid level 0. Every L-node has a unique RGB color selected to remain visually distinct from existing L-node colors. Color identifies an L-node: its visible copies in R have exactly the same color and grid level. One L-node may have several R-copies; the node numbers in L and R are independent creation numbers. When a new L-node `v` is added as a child of `x`, the algorithm proceeds as follows: 
 
 1. **Use the current match of `x`.** Each L-node has one current R-match: its newest visible R-copy. A new L-child `v` is attached to this match.
 2. **Replace a saturated match.** If the current R-match `r` has no room for the new branch, split the incoming R-edge at the grid line immediately below `r` and add a new copy `r'` beside `r`. If that attachment point is also full, copy the required attachment path first. The copy has the same color and grid level as `r`, and becomes the current match of `x`.
@@ -68,5 +60,3 @@ When a new L-node `v` is added as a child of `x`, the algorithm proceeds as foll
 5. **Update the layout.** Redistribute horizontal positions and rescale the shared vertical grid as needed. Existing R-parent relationships are preserved; the operation adds a new chain.
 
 For example, if a new L-node is added under green L-node 4 and its current green R-match is full, a new green copy is created beside that match first. The new L-node's R-copy then attaches above the replacement copy; the replacement is the new current match for L-node 4.
-
-Every R-node has at most two children. The **splice/split** controls change the display without changing this underlying R-tree structure.
