@@ -36,7 +36,7 @@ The **back (‹)** and **forward (›)** buttons move one successful node additi
 
 ### Export the current view
 
-- The **download icon** before **svg** in the top export group downloads a text file containing tree-style diagrams for the previous and current stages. 
+- The **download icon** downloads a text file containing tree-style diagrams for the previous and current stages. 
 - **svg** downloads the current two-tree construction area as an svg file (standalone and html-embeded)
 - The top **gif** button downloads the transitions since the last reset as svg and gif files.
 - The **gif** beside **splice** downloads gif/svg file with the plice/split transition which  transforms the R-tree into the L-tree.
